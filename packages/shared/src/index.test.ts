@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { PACKAGE_NAME, ZedError, ZedErrorCode } from "./index.js";
+import {
+  ForeignKeyViolationError,
+  NotNullViolationError,
+  PACKAGE_NAME,
+  RecordNotFoundError,
+  UniqueConstraintError,
+  ZedError,
+  ZedErrorCode,
+} from "./index.js";
 
 describe("@zed-orm/shared", () => {
   it("exports package identity", () => {
@@ -13,5 +21,20 @@ describe("@zed-orm/shared", () => {
     expect(error.code).toBe("ZED_PARSE_ERROR");
     expect(error.message).toBe("Invalid token");
     expect(error.name).toBe("ZedError");
+  });
+
+  it("exposes database and not-found error types", () => {
+    expect(new UniqueConstraintError("dup").code).toBe(
+      "ZED_UNIQUE_CONSTRAINT_ERROR",
+    );
+    expect(new NotNullViolationError("null").code).toBe(
+      "ZED_NOT_NULL_VIOLATION_ERROR",
+    );
+    expect(new ForeignKeyViolationError("fk").code).toBe(
+      "ZED_FOREIGN_KEY_VIOLATION_ERROR",
+    );
+    expect(new RecordNotFoundError("missing").code).toBe(
+      "ZED_RECORD_NOT_FOUND_ERROR",
+    );
   });
 });

@@ -4,7 +4,9 @@ import type {
   QueryResult,
   TransactionContext,
 } from "@zed-orm/runtime";
+import { ZedError } from "@zed-orm/shared";
 import { DriverError } from "./errors.js";
+import { mapPostgresError } from "./map-error.js";
 import type { PostgresDriverOptions } from "./types.js";
 
 type QueryExecutor = pg.Pool | pg.PoolClient;
@@ -25,7 +27,7 @@ async function runQuery<T>(
     const result = await executor.query(sql, params);
     return mapQueryResult<T>(result);
   } catch (cause) {
-    throw new DriverError("PostgreSQL query failed.", { cause });
+    throw mapPostgresError(cause, "PostgreSQL query failed.");
   }
 }
 
@@ -60,11 +62,11 @@ class PostgresTransactionContext implements TransactionContext {
         );
       }
 
-      if (error instanceof DriverError) {
+      if (error instanceof ZedError) {
         throw error;
       }
 
-      throw new DriverError("Nested transaction failed.", { cause: error });
+      throw mapPostgresError(error, "Nested transaction failed.");
     }
   }
 }
@@ -169,11 +171,11 @@ export class PostgresDriver implements DatabaseDriver {
         );
       }
 
-      if (error instanceof DriverError) {
+      if (error instanceof ZedError) {
         throw error;
       }
 
-      throw new DriverError("Transaction failed.", { cause: error });
+      throw mapPostgresError(error, "Transaction failed.");
     } finally {
       client.release();
     }

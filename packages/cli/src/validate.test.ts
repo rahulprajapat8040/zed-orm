@@ -7,12 +7,20 @@ import { runValidate } from "./commands/validate.js";
 
 describe("zed validate", () => {
   let workDir: string;
+  const previousCwd = process.cwd();
 
   beforeEach(async () => {
     workDir = await mkdtemp(join(tmpdir(), "zed-cli-validate-"));
+    await writeFile(
+      join(workDir, "package.json"),
+      JSON.stringify({ name: "zed-cli-validate", version: "1.0.0", private: true }),
+      "utf8",
+    );
+    process.chdir(workDir);
   });
 
   afterEach(async () => {
+    process.chdir(previousCwd);
     await rm(workDir, { recursive: true, force: true });
   });
 
@@ -48,12 +56,15 @@ model User {
 
 describe("zed init", () => {
   let workDir: string;
+  const previousCwd = process.cwd();
 
   beforeEach(async () => {
     workDir = await mkdtemp(join(tmpdir(), "zed-cli-init-"));
+    process.chdir(workDir);
   });
 
   afterEach(async () => {
+    process.chdir(previousCwd);
     await rm(workDir, { recursive: true, force: true });
   });
 

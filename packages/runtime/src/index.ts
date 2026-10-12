@@ -7,6 +7,7 @@
 export const PACKAGE_NAME = "@zed-orm/runtime" as const;
 
 export { ModelDelegate, ModelReadDelegate } from "./model-delegate.js";
+export type { ModelDelegateTypes } from "./model-delegate-types.js";
 export { attachIncludes } from "./relation-loader.js";
 export { SoftDeleteError } from "./soft-delete-engine.js";
 export {

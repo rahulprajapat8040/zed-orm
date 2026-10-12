@@ -21,6 +21,26 @@ export function resolveDataField(
   return field;
 }
 
+/** Apply automatic `@updatedAt` timestamps before write compilation. */
+export function applyAutomaticTimestamps(
+  meta: ModelMeta,
+  data: DataInput,
+  operation: "create" | "update",
+): DataInput {
+  const result: Record<string, DataInput[keyof DataInput]> = { ...data };
+
+  for (const field of meta.fields.values()) {
+    if (field.isUpdatedAt !== true) {
+      continue;
+    }
+    if (operation === "update" || result[field.name] === undefined) {
+      result[field.name] = new Date();
+    }
+  }
+
+  return result;
+}
+
 /** Validate and return data entries in stable field-name order. */
 export function normalizeDataInput(
   meta: ModelMeta,

@@ -14,12 +14,21 @@ model User {
 describe("zed generate", () => {
   let workDir: string;
 
+  const previousCwd = process.cwd();
+
   beforeEach(async () => {
     workDir = await mkdtemp(join(tmpdir(), "zed-cli-"));
     await writeFile(join(workDir, "schema.zed"), schemaSource, "utf8");
+    await writeFile(
+      join(workDir, "package.json"),
+      JSON.stringify({ name: "zed-cli-test", version: "1.0.0", private: true }),
+      "utf8",
+    );
+    process.chdir(workDir);
   });
 
   afterEach(async () => {
+    process.chdir(previousCwd);
     await rm(workDir, { recursive: true, force: true });
   });
 

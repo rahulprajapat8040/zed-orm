@@ -3,15 +3,38 @@
 import { createPostgresDriver } from "@zed-orm/driver-postgres";
 import { ModelDelegate, type QueryExecutor, type TransactionClient, withTransaction } from "@zed-orm/runtime";
 import { modelMetas } from "./meta.js";
-import type { Post, User } from "./types.js";
+import type { Post, PostCreateArgs, PostCreateManyArgs, PostDeleteArgs, PostDeleteManyArgs, PostFindFirstArgs, PostFindManyArgs, PostFindUniqueArgs, PostUpdateArgs, PostUpdateManyArgs, User, UserCreateArgs, UserCreateManyArgs, UserDeleteArgs, UserDeleteManyArgs, UserFindFirstArgs, UserFindManyArgs, UserFindUniqueArgs, UserUpdateArgs, UserUpdateManyArgs } from "./types.js";
+
+export type PostDelegate = ModelDelegate<Post,   {
+    readonly findMany: PostFindManyArgs;
+    readonly findFirst: PostFindFirstArgs;
+    readonly findUnique: PostFindUniqueArgs;
+    readonly create: PostCreateArgs;
+    readonly createMany: PostCreateManyArgs;
+    readonly update: PostUpdateArgs;
+    readonly updateMany: PostUpdateManyArgs;
+    readonly delete: PostDeleteArgs;
+    readonly deleteMany: PostDeleteManyArgs;
+  }>;
+export type UserDelegate = ModelDelegate<User,   {
+    readonly findMany: UserFindManyArgs;
+    readonly findFirst: UserFindFirstArgs;
+    readonly findUnique: UserFindUniqueArgs;
+    readonly create: UserCreateArgs;
+    readonly createMany: UserCreateManyArgs;
+    readonly update: UserUpdateArgs;
+    readonly updateMany: UserUpdateManyArgs;
+    readonly delete: UserDeleteArgs;
+    readonly deleteMany: UserDeleteManyArgs;
+  }>;
 
 export interface GeneratedClientOptions {
   readonly databaseUrl: string;
 }
 
 export type ModelDelegates = {
-  readonly post: ModelDelegate<Post>;
-  readonly user: ModelDelegate<User>;
+  readonly post: PostDelegate;
+  readonly user: UserDelegate;
 };
 
 export interface GeneratedClient extends ModelDelegates {
@@ -24,8 +47,8 @@ export interface GeneratedClient extends ModelDelegates {
 
 function createDelegates(executor: QueryExecutor): ModelDelegates {
   return {
-    post: new ModelDelegate<Post>(executor, modelMetas["Post"], modelMetas, "postgresql"),
-    user: new ModelDelegate<User>(executor, modelMetas["User"], modelMetas, "postgresql"),
+    post: new ModelDelegate(executor, modelMetas["Post"], modelMetas, "postgresql") as PostDelegate,
+    user: new ModelDelegate(executor, modelMetas["User"], modelMetas, "postgresql") as UserDelegate,
   };
 }
 
@@ -38,8 +61,8 @@ export function createClient(
   const { $transaction } = withTransaction(driver, createDelegates);
 
   return {
-    post: new ModelDelegate<Post>(driver, modelMetas["Post"], modelMetas, "postgresql", (callback) => driver.transaction((tx) => callback(tx))),
-    user: new ModelDelegate<User>(driver, modelMetas["User"], modelMetas, "postgresql", (callback) => driver.transaction((tx) => callback(tx))),
+    post: new ModelDelegate(driver, modelMetas["Post"], modelMetas, "postgresql", (callback) => driver.transaction((tx) => callback(tx))) as PostDelegate,
+    user: new ModelDelegate(driver, modelMetas["User"], modelMetas, "postgresql", (callback) => driver.transaction((tx) => callback(tx))) as UserDelegate,
     async connect() {
       await driver.connect();
     },

@@ -88,10 +88,19 @@ function emitIncludeInput(model: ValidatedModel, schema: ValidatedSchema): strin
   return `export type ${model.name}Include = {\n${fieldLines.join("\n")}\n};`;
 }
 
+function isWritableOnCreate(field: ValidatedField): boolean {
+  return isStoredField(field);
+}
+
+function isWritableOnUpdate(field: ValidatedField): boolean {
+  return isStoredField(field) && !field.isId && !field.isUpdatedAt;
+}
+
 function emitCreateInput(model: ValidatedModel): string {
-  const fields = [...model.fields.values()].filter((field) => isStoredField(field));
+  const fields = [...model.fields.values()].filter(isWritableOnCreate);
   const fieldLines = fields.map((field) => {
-    const optional = field.isOptional || field.hasDefault ? "?" : "";
+    const optional =
+      field.isOptional || field.hasDefault || field.isUpdatedAt ? "?" : "";
     return `  readonly ${field.name}${optional}: ${fieldToTsType(field)};`;
   });
 
@@ -99,7 +108,7 @@ function emitCreateInput(model: ValidatedModel): string {
 }
 
 function emitUpdateInput(model: ValidatedModel): string {
-  const fields = [...model.fields.values()].filter((field) => isStoredField(field));
+  const fields = [...model.fields.values()].filter(isWritableOnUpdate);
   const fieldLines = fields.map(
     (field) => `  readonly ${field.name}?: ${fieldToTsType(field)};`,
   );

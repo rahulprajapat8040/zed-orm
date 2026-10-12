@@ -1,5 +1,5 @@
 import { quoteIdentifier } from "./dialect.js";
-import { normalizeDataInput } from "./data.js";
+import { applyAutomaticTimestamps, normalizeDataInput } from "./data.js";
 import { QueryError } from "./errors.js";
 import type { ModelMeta, SqlDialect } from "./meta.js";
 import { ParamCollector } from "./params.js";
@@ -39,7 +39,8 @@ export function buildCreate(
   dialect: SqlDialect = "postgresql",
 ): SqlStatement {
   const params = new ParamCollector(dialect);
-  const entries = normalizeDataInput(meta, args.data, "create");
+  const data = applyAutomaticTimestamps(meta, args.data, "create");
+  const entries = normalizeDataInput(meta, data, "create");
   const table = quoteIdentifier(dialect, meta.tableName);
 
   const columns = entries.map(([fieldName, _value]) =>
@@ -66,14 +67,16 @@ export function buildCreateMany(
     throw new QueryError("createMany requires at least one record in data.");
   }
 
-  const firstKeys = normalizeDataInput(meta, args.data[0]!, "createMany").map(
+  const firstData = applyAutomaticTimestamps(meta, args.data[0]!, "create");
+  const firstKeys = normalizeDataInput(meta, firstData, "createMany").map(
     ([fieldName]) => fieldName,
   );
 
   for (let index = 1; index < args.data.length; index++) {
+    const recordData = applyAutomaticTimestamps(meta, args.data[index]!, "create");
     const keys = normalizeDataInput(
       meta,
-      args.data[index]!,
+      recordData,
       "createMany",
     ).map(([fieldName]) => fieldName);
     if (keys.join("\0") !== firstKeys.join("\0")) {
@@ -90,7 +93,8 @@ export function buildCreateMany(
   );
 
   const valueGroups = args.data.map((record) => {
-    const entries = normalizeDataInput(meta, record, "createMany");
+    const recordData = applyAutomaticTimestamps(meta, record, "create");
+    const entries = normalizeDataInput(meta, recordData, "createMany");
     return `(${entries.map(([, value]) => params.add(value)).join(", ")})`;
   });
 
@@ -111,7 +115,8 @@ function buildUpdateStatement(
   returningSelect?: CreateArgs["select"],
 ): SqlStatement {
   const params = new ParamCollector(dialect);
-  const entries = normalizeDataInput(meta, args.data, "update");
+  const data = applyAutomaticTimestamps(meta, args.data, "update");
+  const entries = normalizeDataInput(meta, data, "update");
   const table = quoteIdentifier(dialect, meta.tableName);
 
   const setClause = entries

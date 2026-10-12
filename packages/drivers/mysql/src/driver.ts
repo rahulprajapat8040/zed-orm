@@ -4,7 +4,9 @@ import type {
   QueryResult,
   TransactionContext,
 } from "@zed-orm/runtime";
+import { ZedError } from "@zed-orm/shared";
 import { DriverError } from "./errors.js";
+import { mapMysqlError } from "./map-error.js";
 import type { MysqlDriverOptions } from "./types.js";
 
 type QueryExecutor = mysql.Pool | mysql.PoolConnection;
@@ -29,7 +31,7 @@ async function runQuery<T>(
       rowCount: header.affectedRows,
     };
   } catch (cause) {
-    throw new DriverError("MySQL query failed.", { cause });
+    throw mapMysqlError(cause, "MySQL query failed.");
   }
 }
 
@@ -64,11 +66,11 @@ class MysqlTransactionContext implements TransactionContext {
         );
       }
 
-      if (error instanceof DriverError) {
+      if (error instanceof ZedError) {
         throw error;
       }
 
-      throw new DriverError("Nested transaction failed.", { cause: error });
+      throw mapMysqlError(error, "Nested transaction failed.");
     }
   }
 }
@@ -166,11 +168,11 @@ export class MysqlDriver implements DatabaseDriver {
         );
       }
 
-      if (error instanceof DriverError) {
+      if (error instanceof ZedError) {
         throw error;
       }
 
-      throw new DriverError("Transaction failed.", { cause: error });
+      throw mapMysqlError(error, "Transaction failed.");
     } finally {
       connection.release();
     }

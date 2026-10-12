@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/shared",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Shared utilities and error types for Zed ORM",
   "license": "MIT",
   "type": "module",

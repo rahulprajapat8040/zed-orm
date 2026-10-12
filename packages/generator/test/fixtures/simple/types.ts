@@ -51,7 +51,6 @@ export type PostCreateInput = {
 };
 
 export type PostUpdateInput = {
-  readonly id?: string;
   readonly title?: string;
   readonly authorId?: string;
 };
@@ -140,7 +139,6 @@ export type UserCreateInput = {
 };
 
 export type UserUpdateInput = {
-  readonly id?: string;
   readonly email?: string;
   readonly role?: Role;
 };

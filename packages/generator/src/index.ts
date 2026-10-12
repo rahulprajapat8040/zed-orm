@@ -7,6 +7,7 @@
 export const PACKAGE_NAME = "@zed-orm/generator" as const;
 
 export { modelToMeta, schemaToModelMetas } from "./schema-to-meta.js";
+export { readDatasourceProvider } from "./read-provider.js";
 export {
   generateClient,
   type GeneratedFile,

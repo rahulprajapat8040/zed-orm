@@ -8,6 +8,7 @@ import { runGenerate } from "./commands/generate.js";
 import { runInit } from "./commands/init.js";
 import { runMigrate } from "./commands/migrate.js";
 import { runValidate } from "./commands/validate.js";
+import { loadEnvFromDirectory } from "./load-env.js";
 
 export const PACKAGE_NAME = "@zed-orm/cli" as const;
 
@@ -15,6 +16,8 @@ export const PACKAGE_NAME = "@zed-orm/cli" as const;
 export async function runCli(
   argv: readonly string[] = process.argv.slice(2),
 ): Promise<number> {
+  loadEnvFromDirectory(process.cwd());
+
   const command = argv[0];
 
   if (command === undefined) {

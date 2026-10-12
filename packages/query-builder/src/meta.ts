@@ -25,6 +25,8 @@ export interface FieldMeta {
   readonly isId: boolean;
   readonly isUnique: boolean;
   readonly isList: boolean;
+  /** Field annotated with `@updatedAt` — auto-managed on create/update. */
+  readonly isUpdatedAt?: boolean;
 }
 
 /** Relation cardinality from the owning model's perspective. */

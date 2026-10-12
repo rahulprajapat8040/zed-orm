@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/nestjs",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "NestJS integration for Zed ORM",
   "license": "MIT",
   "type": "module",

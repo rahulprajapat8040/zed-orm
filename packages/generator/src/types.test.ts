@@ -5,6 +5,9 @@ import type {
   PostFindManyArgs,
   PostInclude,
   User,
+  UserCreateArgs,
+  UserCreateInput,
+  UserFindManyArgs,
   UserFindUniqueArgs,
   UserInclude,
   UserUpdateInput,
@@ -30,6 +33,16 @@ describe("generated type fixtures", () => {
     }>();
   });
 
+  it("accepts valid relation includes", () => {
+    expectTypeOf<{ include: { posts: true } }>().toMatchTypeOf<UserFindManyArgs>();
+    expectTypeOf<{ include: { author: true } }>().toMatchTypeOf<PostFindManyArgs>();
+  });
+
+  it("rejects invalid relation includes", () => {
+    expectTypeOf<{ include: { nonexistentRelation: true } }>().not.toMatchTypeOf<UserFindManyArgs>();
+    expectTypeOf<{ include: { posts: true } }>().not.toMatchTypeOf<PostFindManyArgs>();
+  });
+
   it("types query argument shapes", () => {
     expectTypeOf<UserWhereInput>().toMatchTypeOf<{
       email?: string;
@@ -46,17 +59,31 @@ describe("generated type fixtures", () => {
       skip?: number;
       include?: PostInclude;
     }>();
+  });
 
+  it("validates create input fields and types", () => {
+    expectTypeOf<{ email: string; role: "USER" }>().toMatchTypeOf<UserCreateInput>();
+    expectTypeOf<UserCreateArgs>().toMatchTypeOf<{
+      data: UserCreateInput;
+    }>();
+
+    expectTypeOf<{ email: number }>().not.toMatchTypeOf<UserCreateInput>();
+    expectTypeOf<{ email: "test@example.com" }>().not.toMatchTypeOf<UserCreateInput>();
+  });
+
+  it("validates update input fields", () => {
+    expectTypeOf<{ email?: string }>().toMatchTypeOf<UserUpdateInput>();
+    expectTypeOf<{ email: 123 }>().not.toMatchTypeOf<UserUpdateInput>();
+    expectTypeOf<{ id: string }>().not.toMatchTypeOf<UserUpdateInput>();
+  });
+
+  it("types Post create args with required scalar fields", () => {
     expectTypeOf<PostCreateArgs>().toMatchTypeOf<{
       data: {
         id: string;
         title: string;
         authorId: string;
       };
-    }>();
-
-    expectTypeOf<UserUpdateInput>().toMatchTypeOf<{
-      email?: string;
     }>();
   });
 });

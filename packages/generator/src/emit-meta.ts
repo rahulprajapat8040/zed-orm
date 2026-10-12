@@ -22,6 +22,9 @@ function serializeFieldMeta(field: GeneratorFieldMeta): string {
   if (field.enumName !== undefined) {
     parts.push(`enumName: ${JSON.stringify(field.enumName)}`);
   }
+  if (field.isUpdatedAt === true) {
+    parts.push(`isUpdatedAt: true`);
+  }
 
   return `{ ${parts.join(", ")} }`;
 }

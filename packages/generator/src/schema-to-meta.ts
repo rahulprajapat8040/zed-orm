@@ -26,6 +26,7 @@ function toFieldMeta(field: ValidatedField): GeneratorFieldMeta {
     isId: field.isId,
     isUnique: field.isUnique,
     isList: field.isList,
+    ...(field.isUpdatedAt ? { isUpdatedAt: true } : {}),
   };
 
   if (field.typeKind === "scalar") {

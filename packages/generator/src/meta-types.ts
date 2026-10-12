@@ -21,6 +21,7 @@ export interface GeneratorFieldMeta {
   readonly isId: boolean;
   readonly isUnique: boolean;
   readonly isList: boolean;
+  readonly isUpdatedAt?: boolean;
 }
 
 export interface GeneratorRelationMeta {

@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { DEFAULT_MIGRATIONS_DIR } from "@zed-orm/migration";
+import { ensureRuntimeDependencies } from "../ensure-dependencies.js";
 
 const DEFAULT_SCHEMA = `datasource db {
   provider = "postgresql"
@@ -60,6 +61,8 @@ export async function runInit(argv: readonly string[]): Promise<number> {
   await mkdir(migrationsDir, { recursive: true });
   await mkdir(outputDir, { recursive: true });
   await writeFile(schemaPath, DEFAULT_SCHEMA, { encoding: "utf8", flag: "wx" });
+
+  await ensureRuntimeDependencies(process.cwd(), "postgresql");
 
   console.log(`zed init: created ${schemaPath}`);
   console.log(`zed init: created ${migrationsDir}/`);

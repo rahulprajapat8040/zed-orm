@@ -1,8 +1,9 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { generateClient } from "@zed-orm/generator";
+import { generateClient, readDatasourceProvider } from "@zed-orm/generator";
 import { parseSchema } from "@zed-orm/parser";
 import { validateSchema } from "@zed-orm/schema";
+import { ensureRuntimeDependencies } from "../ensure-dependencies.js";
 
 export interface GenerateCommandOptions {
   readonly schemaPath: string;
@@ -39,6 +40,9 @@ export async function runGenerate(argv: readonly string[]): Promise<number> {
   const ast = parseSchema(source, schemaPath);
   const schema = validateSchema(ast);
   const result = generateClient(schema);
+  const provider = readDatasourceProvider(schema);
+
+  await ensureRuntimeDependencies(process.cwd(), provider);
 
   await mkdir(outputDir, { recursive: true });
 

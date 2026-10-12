@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/query-builder",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Parameterized SQL query builder for Zed ORM",
   "license": "MIT",
   "type": "module",

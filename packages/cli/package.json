@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/cli",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Zed ORM command-line interface",
   "license": "MIT",
   "type": "module",
@@ -33,12 +33,13 @@
   "dependencies": {
     "@zed-orm/driver-mysql": "workspace:*",
     "@zed-orm/driver-postgres": "workspace:*",
-    "@zed-orm/runtime": "workspace:*",
-    "@zed-orm/parser": "workspace:*",
-    "@zed-orm/schema": "workspace:*",
     "@zed-orm/generator": "workspace:*",
     "@zed-orm/migration": "workspace:*",
-    "@zed-orm/shared": "workspace:*"
+    "@zed-orm/parser": "workspace:*",
+    "@zed-orm/runtime": "workspace:*",
+    "@zed-orm/schema": "workspace:*",
+    "@zed-orm/shared": "workspace:*",
+    "dotenv": "^18.0.7"
   },
   "bin": {
     "zed": "./dist/bin.cjs"

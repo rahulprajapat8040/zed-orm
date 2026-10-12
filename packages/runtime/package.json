@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/runtime",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Runtime connection management and query execution",
   "license": "MIT",
   "type": "module",
