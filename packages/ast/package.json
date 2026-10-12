@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/ast",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "AST types and source locations for Zed schema",
   "license": "MIT",
   "type": "module",

@@ -3,7 +3,7 @@
   "private": true,
   "displayName": "Zed ORM",
   "description": "Language support for Zed ORM schema files",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "zed-orm",
   "license": "MIT",
   "repository": {
