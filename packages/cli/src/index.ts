@@ -51,14 +51,14 @@ function printHelp(): void {
 
 Usage:
   zed init [options]         Initialize a new Zed project
-  zed validate [options]     Validate schema.zed
+  zed validate [options]     Validate zed/zed.schema
   zed generate [options]     Generate the TypeScript client
   zed migrate <subcommand>   Manage database migrations
 
 Options:
-  -s, --schema <path>        Schema file (default: schema.zed)
-  -o, --output <dir>         Output directory (default: generated/zed)
-  -m, --migrations <dir>     Migrations directory (default: migrations)
+  -s, --schema <path>        Schema file (default: zed/zed.schema)
+  -o, --output <dir>         Output directory (default: schema generator output)
+  -m, --migrations <dir>     Migrations directory (default: zed/migrations)
   -h, --help                 Show help
 
 Migrate subcommands:

@@ -11,9 +11,9 @@
 
 ## Workflow
 
-1. Define models in `schema.zed`.
+1. Define models in `zed/zed.schema`.
 2. Run `zed migrate dev` to diff against the last snapshot, write SQL, and apply it.
-3. Commit `migrations/` and `migrations/snapshot.json` with your schema changes.
+3. Commit `zed/migrations/` and its snapshot with your schema changes.
 4. Run `zed migrate deploy` in CI/production to apply pending migrations.
 
 ## CLI surface
@@ -30,10 +30,12 @@ zed migrate status                # list applied and pending migrations
 ## On-disk layout
 
 ```text
-migrations/
-  snapshot.json                   # last applied schema snapshot
-  20251012120000_init/
-    migration.sql
+zed/
+  zed.schema
+  migrations/
+    snapshot.json                 # last applied schema snapshot
+    20251012120000_init/
+      migration.sql
 ```
 
 Applied migrations are tracked in the `_zed_migrations` table.

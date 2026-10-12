@@ -1,18 +1,22 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { generateClient, readDatasourceProvider } from "@zed-orm/generator";
+import {
+  generateClient,
+  readDatasourceProvider,
+  readGeneratorOutput,
+} from "@zed-orm/generator";
 import { parseSchema } from "@zed-orm/parser";
 import { validateSchema } from "@zed-orm/schema";
 import { ensureRuntimeDependencies } from "../ensure-dependencies.js";
 
 export interface GenerateCommandOptions {
   readonly schemaPath: string;
-  readonly outputDir: string;
+  readonly outputDir?: string;
 }
 
 function parseGenerateArgs(argv: readonly string[]): GenerateCommandOptions {
-  let schemaPath = "schema.zed";
-  let outputDir = "generated/zed";
+  let schemaPath = "zed/zed.schema";
+  let outputDir: string | undefined;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -27,20 +31,25 @@ function parseGenerateArgs(argv: readonly string[]): GenerateCommandOptions {
     }
   }
 
-  return { schemaPath, outputDir };
+  return {
+    schemaPath,
+    ...(outputDir !== undefined ? { outputDir } : {}),
+  };
 }
 
 /** Run `zed generate`. */
 export async function runGenerate(argv: readonly string[]): Promise<number> {
   const options = parseGenerateArgs(argv);
   const schemaPath = resolve(options.schemaPath);
-  const outputDir = resolve(options.outputDir);
 
   const source = await readFile(schemaPath, "utf8");
   const ast = parseSchema(source, schemaPath);
   const schema = validateSchema(ast);
   const result = generateClient(schema);
   const provider = readDatasourceProvider(schema);
+  const outputDir = resolve(
+    options.outputDir ?? readGeneratorOutput(schema) ?? "generated/zed",
+  );
 
   await ensureRuntimeDependencies(process.cwd(), provider);
 

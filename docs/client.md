@@ -7,11 +7,15 @@
 Generate a typed client from your schema:
 
 ```bash
-zed generate --schema schema.zed --output generated/zed
+zed generate
 ```
 
+The CLI reads `zed/zed.schema` by default and writes the client to the path in
+the `output` setting of its `generator client` block. Paths are resolved from
+the project root. Pass `--schema` or `--output` to override those defaults.
+
 ```ts
-import { createClient } from "./generated/zed/index.js";
+import { createClient } from "./src/generated/zed/index.js";
 
 const db = createClient({
   databaseUrl: process.env.DATABASE_URL!,
@@ -86,7 +90,7 @@ await db.user.findMany({
 ## Pipeline
 
 ```text
-schema.zed → parse → validate → generateClient → generated/zed/
+zed/zed.schema → parse → validate → generateClient → configured output/
                                       ↓
                             ModelDelegate + query-builder SQL
                                       ↓

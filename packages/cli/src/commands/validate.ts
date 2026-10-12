@@ -8,7 +8,7 @@ export interface ValidateCommandOptions {
 }
 
 function parseValidateArgs(argv: readonly string[]): ValidateCommandOptions {
-  let schemaPath = "schema.zed";
+  let schemaPath = "zed/zed.schema";
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];

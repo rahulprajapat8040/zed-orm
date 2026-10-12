@@ -3,9 +3,7 @@ import type { ValidatedSchema } from "@zed-orm/schema";
 import type { SqlDialect } from "@zed-orm/query-builder";
 
 /** Read the datasource provider from a validated schema. */
-export function readDatasourceProvider(
-  schema: ValidatedSchema,
-): SqlDialect {
+export function readDatasourceProvider(schema: ValidatedSchema): SqlDialect {
   const datasource = schema.datasources[0];
   if (datasource === undefined) {
     return "postgresql";
@@ -24,4 +22,17 @@ export function readDatasourceProvider(
   }
 
   return "postgresql";
+}
+
+/** Read the generated client output path from the `client` generator block. */
+export function readGeneratorOutput(
+  schema: ValidatedSchema,
+): string | undefined {
+  const generator = schema.generators.find(
+    (candidate) => candidate.name.name === "client",
+  );
+  const output = generator?.config.find((entry) => entry.key.name === "output");
+  return output !== undefined && isStringLiteral(output.value)
+    ? output.value.value
+    : undefined;
 }

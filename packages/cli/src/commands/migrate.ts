@@ -1,10 +1,9 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { createMysqlDriver } from "@zed-orm/driver-mysql";
 import { createPostgresDriver } from "@zed-orm/driver-postgres";
 import type { DatabaseDriver } from "@zed-orm/runtime";
 import {
-  DEFAULT_MIGRATIONS_DIR,
   SNAPSHOT_FILE_NAME,
   applyMigration,
   applyPendingMigrations,
@@ -37,8 +36,8 @@ function parseMigrateArgs(argv: readonly string[]): {
   options: MigrateCommandOptions;
 } {
   let subcommand = "help";
-  let schemaPath = "schema.zed";
-  let migrationsDir: string = DEFAULT_MIGRATIONS_DIR;
+  let schemaPath = "zed/zed.schema";
+  let migrationsDir: string | undefined;
   let databaseUrl = process.env["DATABASE_URL"];
   let name: string | undefined;
 
@@ -73,7 +72,7 @@ function parseMigrateArgs(argv: readonly string[]): {
     subcommand,
     options: {
       schemaPath,
-      migrationsDir,
+      migrationsDir: migrationsDir ?? join(dirname(schemaPath), "migrations"),
       ...(databaseUrl !== undefined ? { databaseUrl } : {}),
       ...(name !== undefined ? { name } : {}),
     },
@@ -241,7 +240,9 @@ function buildDropStatements(target: SchemaSnapshot): string[] {
   ];
 }
 
-async function runMigrateDeploy(options: MigrateCommandOptions): Promise<number> {
+async function runMigrateDeploy(
+  options: MigrateCommandOptions,
+): Promise<number> {
   const databaseUrl = requireDatabaseUrl(options.databaseUrl);
   if (databaseUrl.length === 0) {
     return 1;
@@ -263,7 +264,9 @@ async function runMigrateDeploy(options: MigrateCommandOptions): Promise<number>
   return 0;
 }
 
-async function runMigrateStatus(options: MigrateCommandOptions): Promise<number> {
+async function runMigrateStatus(
+  options: MigrateCommandOptions,
+): Promise<number> {
   const databaseUrl = requireDatabaseUrl(options.databaseUrl);
   if (databaseUrl.length === 0) {
     return 1;
@@ -288,7 +291,9 @@ async function runMigrateStatus(options: MigrateCommandOptions): Promise<number>
   return 0;
 }
 
-async function runMigrateReset(options: MigrateCommandOptions): Promise<number> {
+async function runMigrateReset(
+  options: MigrateCommandOptions,
+): Promise<number> {
   const databaseUrl = requireDatabaseUrl(options.databaseUrl);
   if (databaseUrl.length === 0) {
     return 1;
@@ -318,8 +323,8 @@ Usage:
   zed migrate reset                   Drop schema objects and reapply all migrations
 
 Options:
-  -s, --schema <path>                 Schema file (default: schema.zed)
-  -m, --migrations <dir>              Migrations directory (default: migrations)
+  -s, --schema <path>                 Schema file (default: zed/zed.schema)
+  -m, --migrations <dir>              Migrations directory (default: beside schema)
       --url <database-url>            Database URL (default: DATABASE_URL env)
       --name <slug>                   Migration name for dev (default: migration)
 `);

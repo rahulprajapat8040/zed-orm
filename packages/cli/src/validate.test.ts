@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -13,7 +13,11 @@ describe("zed validate", () => {
     workDir = await mkdtemp(join(tmpdir(), "zed-cli-validate-"));
     await writeFile(
       join(workDir, "package.json"),
-      JSON.stringify({ name: "zed-cli-validate", version: "1.0.0", private: true }),
+      JSON.stringify({
+        name: "zed-cli-validate",
+        version: "1.0.0",
+        private: true,
+      }),
       "utf8",
     );
     process.chdir(workDir);
@@ -68,20 +72,20 @@ describe("zed init", () => {
     await rm(workDir, { recursive: true, force: true });
   });
 
-  it("creates schema and migration directories", async () => {
-    const schemaPath = join(workDir, "schema.zed");
-    const code = await runInit([
-      "--schema",
-      schemaPath,
-      "--migrations",
-      join(workDir, "migrations"),
-      "--output",
-      join(workDir, "generated"),
-    ]);
+  it("creates the Zed schema, migrations, and configured output directories", async () => {
+    const schemaPath = join(workDir, "zed", "zed.schema");
+    const code = await runInit([]);
 
     expect(code).toBe(0);
     const schema = await readFile(schemaPath, "utf8");
     expect(schema).toContain("model User");
     expect(schema).toContain('provider = "postgresql"');
+    expect(schema).toContain('output   = "src/generated/zed"');
+    await expect(
+      access(join(workDir, "zed", "migrations")),
+    ).resolves.toBeUndefined();
+    await expect(
+      access(join(workDir, "src", "generated", "zed")),
+    ).resolves.toBeUndefined();
   });
 });

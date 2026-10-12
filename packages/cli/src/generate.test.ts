@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -48,5 +48,81 @@ describe("zed generate", () => {
 
     expect(index).toContain('export * from "./client.js"');
     expect(types).toContain("export type User = {");
+  });
+
+  it("uses the output path configured in the schema", async () => {
+    const schemaPath = join(workDir, "zed", "zed.schema");
+    const outputDir = join(workDir, "src", "generated", "zed");
+    await mkdir(join(workDir, "zed"), { recursive: true });
+    await writeFile(
+      schemaPath,
+      `generator client {
+  provider = "zed-client"
+  output   = "src/generated/zed"
+}
+
+${schemaSource}`,
+      "utf8",
+    );
+
+    const code = await runGenerate(["--schema", schemaPath]);
+
+    expect(code).toBe(0);
+    expect(await readFile(join(outputDir, "index.ts"), "utf8")).toContain(
+      'export * from "./client.js"',
+    );
+  });
+
+  it("uses the standard schema location when no arguments are supplied", async () => {
+    const schemaPath = join(workDir, "zed", "zed.schema");
+    const outputDir = join(workDir, "src", "generated", "zed");
+    await mkdir(join(workDir, "zed"), { recursive: true });
+    await writeFile(
+      schemaPath,
+      `generator client {
+  provider = "zed-client"
+  output   = "src/generated/zed"
+}
+
+${schemaSource}`,
+      "utf8",
+    );
+
+    const code = await runGenerate([]);
+
+    expect(code).toBe(0);
+    await expect(
+      readFile(join(outputDir, "index.ts"), "utf8"),
+    ).resolves.toContain('export * from "./client.js"');
+  });
+
+  it("allows --output to override the schema output path", async () => {
+    const schemaPath = join(workDir, "schema.zed");
+    await writeFile(
+      schemaPath,
+      `generator client {
+  provider = "zed-client"
+  output   = "schema-output"
+}
+
+${schemaSource}`,
+      "utf8",
+    );
+    const outputDir = join(workDir, "override");
+
+    const code = await runGenerate([
+      "--schema",
+      join(workDir, "schema.zed"),
+      "--output",
+      outputDir,
+    ]);
+
+    expect(code).toBe(0);
+    await expect(
+      readFile(join(outputDir, "index.ts"), "utf8"),
+    ).resolves.toContain('export * from "./client.js"');
+    await expect(
+      readFile(join(workDir, "schema-output", "index.ts"), "utf8"),
+    ).rejects.toMatchObject({ code: "ENOENT" });
   });
 });

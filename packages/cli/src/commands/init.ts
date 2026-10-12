@@ -1,16 +1,16 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
-import { DEFAULT_MIGRATIONS_DIR } from "@zed-orm/migration";
+import { dirname, join, resolve } from "node:path";
 import { ensureRuntimeDependencies } from "../ensure-dependencies.js";
 
-const DEFAULT_SCHEMA = `datasource db {
+function createDefaultSchema(outputDir: string): string {
+  return `datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "zed-client"
-  output   = "generated/zed"
+  output   = ${outputDir}
 }
 
 model User {
@@ -18,6 +18,7 @@ model User {
   email String @unique
 }
 `;
+}
 
 export interface InitCommandOptions {
   readonly schemaPath: string;
@@ -26,9 +27,9 @@ export interface InitCommandOptions {
 }
 
 function parseInitArgs(argv: readonly string[]): InitCommandOptions {
-  let schemaPath = "schema.zed";
-  let migrationsDir: string = DEFAULT_MIGRATIONS_DIR;
-  let outputDir = "generated/zed";
+  let schemaPath = "zed/zed.schema";
+  let migrationsDir: string | undefined;
+  let outputDir = "src/generated/zed";
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -48,7 +49,11 @@ function parseInitArgs(argv: readonly string[]): InitCommandOptions {
     }
   }
 
-  return { schemaPath, migrationsDir, outputDir };
+  return {
+    schemaPath,
+    migrationsDir: migrationsDir ?? join(dirname(schemaPath), "migrations"),
+    outputDir,
+  };
 }
 
 /** Run `zed init`. */
@@ -58,9 +63,19 @@ export async function runInit(argv: readonly string[]): Promise<number> {
   const migrationsDir = resolve(options.migrationsDir);
   const outputDir = resolve(options.outputDir);
 
+  await mkdir(dirname(schemaPath), { recursive: true });
   await mkdir(migrationsDir, { recursive: true });
   await mkdir(outputDir, { recursive: true });
-  await writeFile(schemaPath, DEFAULT_SCHEMA, { encoding: "utf8", flag: "wx" });
+  await writeFile(
+    schemaPath,
+    createDefaultSchema(
+      JSON.stringify(options.outputDir.replaceAll("\\", "/")),
+    ),
+    {
+      encoding: "utf8",
+      flag: "wx",
+    },
+  );
 
   await ensureRuntimeDependencies(process.cwd(), "postgresql");
 
