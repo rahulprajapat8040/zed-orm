@@ -9,15 +9,15 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "pnpm -r --filter './packages/**' run build",
-    "typecheck": "pnpm -r --filter './packages/**' run typecheck",
+    "build": "pnpm -r --filter \"./packages/*\" --filter \"./packages/drivers/*\" run build",
+    "typecheck": "pnpm -r --filter \"./packages/*\" --filter \"./packages/drivers/*\" run typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "pnpm -r --filter './packages/**' run clean",
+    "clean": "pnpm -r --filter \"./packages/*\" --filter \"./packages/drivers/*\" run clean",
     "bench": "vitest bench"
   },
   "devDependencies": {

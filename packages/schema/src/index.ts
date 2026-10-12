@@ -6,6 +6,13 @@
  */
 
 export { SchemaError, type SchemaErrorOptions } from "./errors.js";
+export {
+  BLOCK_ATTRIBUTE_DEFINITIONS,
+  DEFAULT_FUNCTION_DEFINITIONS,
+  FIELD_ATTRIBUTE_DEFINITIONS,
+  type AttributeArgumentDefinition,
+  type AttributeDefinition,
+} from "./attributes.js";
 export type {
   FieldTypeKind,
   SoftDeletePolicy,

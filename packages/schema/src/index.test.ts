@@ -1,10 +1,29 @@
 import { describe, expect, it } from "vitest";
 import { parseSchema } from "@zed-orm/parser";
-import { PACKAGE_NAME, SchemaError, validateSchema } from "./index.js";
+import {
+  BLOCK_ATTRIBUTE_DEFINITIONS,
+  DEFAULT_FUNCTION_DEFINITIONS,
+  FIELD_ATTRIBUTE_DEFINITIONS,
+  PACKAGE_NAME,
+  SchemaError,
+  validateSchema,
+} from "./index.js";
 
 describe("@zed-orm/schema", () => {
   it("exports package identity", () => {
     expect(PACKAGE_NAME).toBe("@zed-orm/schema");
+  });
+
+  it("exports schema attribute and default-function definitions", () => {
+    expect(FIELD_ATTRIBUTE_DEFINITIONS.map(({ name }) => name)).toContain(
+      "relation",
+    );
+    expect(BLOCK_ATTRIBUTE_DEFINITIONS.map(({ name }) => name)).toContain(
+      "softDelete",
+    );
+    expect(DEFAULT_FUNCTION_DEFINITIONS.map(({ name }) => name)).toContain(
+      "uuid",
+    );
   });
 });
 
