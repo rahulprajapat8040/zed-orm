@@ -1,5 +1,16 @@
 # @zed-orm/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [ffbddc5]
+- Updated dependencies [3e74ef8]
+  - @zed-orm/driver-postgres@0.2.0
+  - @zed-orm/schema@0.3.0
+  - @zed-orm/generator@0.2.1
+  - @zed-orm/migration@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

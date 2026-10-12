@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/driver-postgres",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "PostgreSQL driver for Zed ORM",
   "license": "MIT",
   "type": "module",

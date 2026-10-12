@@ -1,5 +1,11 @@
 # @zed-orm/schema
 
+## 0.3.0
+
+### Minor Changes
+
+- 3e74ef8: added output change and folder change stucture like prisma
+
 ## 0.2.0
 
 ### Minor Changes

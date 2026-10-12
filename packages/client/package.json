@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/client",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Public developer-facing Zed ORM client API",
   "license": "MIT",
   "type": "module",

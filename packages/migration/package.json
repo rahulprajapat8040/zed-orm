@@ -1,6 +1,6 @@
 {
   "name": "@zed-orm/migration",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Schema snapshots, diff, and migrations",
   "license": "MIT",
   "type": "module",
