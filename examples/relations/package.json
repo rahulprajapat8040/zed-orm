@@ -1,0 +1,21 @@
+{
+  "name": "@zed-orm/example-relations",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Relations and include example for Zed ORM",
+  "type": "module",
+  "scripts": {
+    "generate": "node ../../packages/cli/dist/bin.cjs generate --schema schema.zed --output generated/zed",
+    "prestart": "pnpm run generate",
+    "start": "node --import tsx src/main.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@zed-orm/driver-postgres": "workspace:*",
+    "@zed-orm/runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

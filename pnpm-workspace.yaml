@@ -1,0 +1,6 @@
+packages:
+  - "packages/*"
+  - "packages/drivers/*"
+  - "examples/*"
+allowBuilds:
+  esbuild: true

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+*.tsbuildinfo
+
+# Coverage / caches
+coverage/
+.turbo/
+.cache/
+*.log
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Test artifacts
+tmp/
+*.tmp
+
+# Generated client (future — keep placeholders tracked)
+# packages/*/generated/
+
+# Benchmarks outputs
+benchmarks/results/

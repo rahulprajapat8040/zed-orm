@@ -1,0 +1,39 @@
+{
+  "name": "@zed-orm/generator",
+  "version": "0.1.0",
+  "description": "Deterministic TypeScript client generator",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@zed-orm/ast": "workspace:*",
+    "@zed-orm/query-builder": "workspace:*",
+    "@zed-orm/schema": "workspace:*",
+    "@zed-orm/shared": "workspace:*"
+  }
+}

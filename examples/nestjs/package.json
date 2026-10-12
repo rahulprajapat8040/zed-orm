@@ -1,0 +1,26 @@
+{
+  "name": "@zed-orm/example-nestjs",
+  "private": true,
+  "version": "0.0.0",
+  "description": "NestJS example for Zed ORM",
+  "type": "module",
+  "scripts": {
+    "generate": "node ../../packages/cli/dist/bin.cjs generate --schema schema.zed --output generated/zed",
+    "prestart": "pnpm run generate",
+    "start": "node --import tsx src/main.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.12",
+    "@nestjs/core": "^11.0.12",
+    "@zed-orm/driver-postgres": "workspace:*",
+    "@zed-orm/nestjs": "workspace:*",
+    "@zed-orm/runtime": "workspace:*",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

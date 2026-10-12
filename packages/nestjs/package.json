@@ -1,0 +1,56 @@
+{
+  "name": "@zed-orm/nestjs",
+  "version": "0.1.0",
+  "description": "NestJS integration for Zed ORM",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.12",
+    "@zed-orm/client": "workspace:*"
+  },
+  "devDependencies": {
+    "@nestjs/core": "^11.0.12",
+    "@nestjs/testing": "^11.0.12",
+    "@zed-orm/driver-postgres": "workspace:*",
+    "@zed-orm/generator": "workspace:*",
+    "@zed-orm/query-builder": "workspace:*",
+    "@zed-orm/runtime": "workspace:*",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0 || ^11.0.0",
+    "@nestjs/core": "^10.0.0 || ^11.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs/core": {
+      "optional": true
+    }
+  }
+}

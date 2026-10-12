@@ -1,0 +1,46 @@
+{
+  "name": "@zed-orm/cli",
+  "version": "0.1.0",
+  "description": "Zed ORM command-line interface",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts src/bin.ts --format esm,cjs --dts --clean",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@zed-orm/driver-mysql": "workspace:*",
+    "@zed-orm/driver-postgres": "workspace:*",
+    "@zed-orm/runtime": "workspace:*",
+    "@zed-orm/parser": "workspace:*",
+    "@zed-orm/schema": "workspace:*",
+    "@zed-orm/generator": "workspace:*",
+    "@zed-orm/migration": "workspace:*",
+    "@zed-orm/shared": "workspace:*"
+  },
+  "bin": {
+    "zed": "./dist/bin.cjs"
+  }
+}
