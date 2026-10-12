@@ -1,0 +1,71 @@
+{
+  "name": "zed-orm-vscode",
+  "private": true,
+  "displayName": "Zed ORM",
+  "description": "Language support for Zed ORM schema files",
+  "version": "0.1.0",
+  "publisher": "zed-orm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rahulprajapat8040/zed-orm"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:zed"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "zed",
+        "aliases": [
+          "Zed",
+          "zed"
+        ],
+        "extensions": [
+          ".zed"
+        ],
+        "configuration": "./language-configuration.json",
+        "mimetypes": [
+          "text/x-zed"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "zed",
+        "scopeName": "source.zed",
+        "path": "./syntaxes/zed.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Zed ORM",
+      "properties": {
+        "zedOrm.debug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable language-server development logs in the Zed ORM output channel."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "pnpm --filter @zed-orm/language-server... run build && tsup --entry.extension src/extension.ts --entry.server ../language-server/src/server.ts --format cjs --out-dir dist --clean --external vscode --no-splitting --platform node",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^4.0.0",
+    "vscode-languageclient": "^10.1.2"
+  }
+}

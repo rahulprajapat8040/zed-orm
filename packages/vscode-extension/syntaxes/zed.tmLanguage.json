@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vscode-textmate/master/syntaxes/grammar.schema.json",
+  "name": "zed",
+  "scopeName": "source.zed",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#keywords" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#attributes" },
+    { "include": "#types" },
+    { "include": "#decls" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-slash.zed", "match": "//.*$" },
+        { "name": "comment.block.zed", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        { "name": "keyword.control.zed", "match": "\\b(model|enum|datasource|generator|true|false|null)\\b" },
+        { "name": "keyword.other.zed", "match": "@@?[A-Za-z_][A-Za-z0-9_]*" }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        { "name": "entity.name.function.zed", "match": "@[A-Za-z_][A-Za-z0-9_]*" },
+        { "name": "variable.parameter.zed", "match": "(?:fields|references|on|name|provider|url|map)\\s*:" }
+      ]
+    },
+    "types": {
+      "patterns": [
+        { "name": "support.type.zed", "match": "\\b(String|Int|BigInt|Float|Decimal|Boolean|DateTime|Json|Bytes)\\b" },
+        { "name": "entity.name.type.zed", "match": "\\b[A-Z][A-Za-z0-9_]*\\b" }
+      ]
+    },
+    "decls": {
+      "patterns": [
+        { "name": "storage.type.zed", "match": "^\\s*(model|enum|datasource|generator)\\b" },
+        { "name": "entity.name.type.zed", "match": "\\b[A-Z][A-Za-z0-9_]*\\b" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        { "name": "string.quoted.double.zed", "begin": "\"", "end": "\"", "patterns": [{ "match": "\\\\." }] },
+        { "name": "string.quoted.single.zed", "begin": "'", "end": "'", "patterns": [{ "match": "\\\\." }] }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.zed", "match": "\\b\\d+(?:\\.\\d+)?\\b" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.separator.zed", "match": "[{}\\[\\]()]" },
+        { "name": "punctuation.accessor.zed", "match": "[.,;]" }
+      ]
+    }
+  }
+}
