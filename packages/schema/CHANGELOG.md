@@ -1,5 +1,11 @@
 # @zed-orm/schema
 
+## 0.2.0
+
+### Minor Changes
+
+- added folder structure like prisma and generation migration
+
 ## 0.1.2
 
 ### Patch Changes

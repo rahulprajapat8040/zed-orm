@@ -3,4 +3,5 @@ packages:
   - "packages/drivers/*"
   - "examples/*"
 allowBuilds:
+  '@vscode/vsce-sign': true
   esbuild: true
